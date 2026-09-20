@@ -1,0 +1,22 @@
+\section{Datasets}\label{sec:datasets}
+
+All six files are in FASTA format: a header line beginning with \texttt{>} followed by lines of sequence. The gene files carry their coordinates inside the reference genome in the header (for example \texttt{MN908947.3:21563-25384} for gene S), which gives an independent ground truth for the search algorithms. \texttt{seq-proteins.txt} contains 24 records, one per viral protein. The two genomes come from NCBI \citep{ncbi_mn908947, ncbi_mt106054}; the proteins correspond to MN908947.3 \citep{zhanglab}.
+
+\ph{Processing paragraph. Main idea: how the files were read. Notes: lines stripped of whitespace and carriage returns (the DNA files use Windows line endings), uppercased, header skipped; any symbol outside \{A, C, G, T\} for DNA or outside the 20 amino-acid letters for proteins is counted and reported as unexpected. Policy: unexpected symbols are kept so positions stay faithful to the file, they are excluded from frequency plots, and they can never match a pattern. The check found no unexpected symbol in any file (Table~\ref{tab:datasets}).}
+
+\begin{table}[H]
+    \centering
+    \small
+    \input{tables/tab_datasets}
+    \caption{Characterisation of the six files. Symbols counts the distinct expected symbols found.}
+    \label{tab:datasets}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{fig_freq_dna}
+    \caption{Relative nucleotide frequencies per DNA file.}
+    \label{fig:freq}
+\end{figure}
+
+\ph{Comment on Figure~\ref{fig:freq}: T is the most frequent base in every file; C is the least frequent in both genomes and in ORF1ab, while in S and M it is G. Gene M is the least skewed. The two genomes have practically identical composition (A 0.299, C 0.184, G 0.196, T 0.321 in both), a first hint of how close they are before any alignment is computed. The amino-acid frequencies (Figure~\ref{fig:freq_protein} in the appendix) are far from uniform: L is the most frequent, W the least.}

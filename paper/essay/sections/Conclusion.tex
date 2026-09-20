@@ -1,0 +1,12 @@
+\section{Conclusions}\label{sec:conclusions}
+
+\ph{Bullet-style conclusions to expand, one per technique, then the comparison.
+(1) Dynamic programming gives the exact answer but its table is the bottleneck; divide and conquer did not change the time bound, it changed what fits in memory, and that is what made the full-genome comparison possible.
+(2) The linear-time string algorithms only pay off when the pattern is repetitive; on real DNA brute force is already linear in practice, so the theoretical worst case is what justifies KMP, not the average run.
+(3) Greedy is provably optimal for the objective it is given, and the ORF experiment shows that the objective is the whole story: maximum count and maximum coverage are different problems.
+(4) Backtracking turns an exponential enumeration into a few dozen nodes because the genome is a very strong constraint; its one apparent failure was the frameshift, a fact about the data.
+(5) Branch and bound is only as good as its bound: the same optimum, far fewer nodes, but no time saved because the bound is loose where the work is.
+(6) Manacher is the only technique whose advantage was invisible on the real data and visible only under an adversarial input.
+Comparison across techniques: which scaled best (linear string algorithms and greedy), which needed the most resources (LCS, quadratic, and exhaustive baselines), whether datasets changed the behaviour (yes: real DNA versus adversarial input flips the naive-vs-KMP and centre-vs-Manacher comparisons; the threshold flips the greedy result).}
+
+\ph{Closing paragraph: what was learned about relating experiment to theory: log-log slopes reproduce the exponents, constants matter (numpy versus Python, $2nm$ versus $nm$), and the baseline must be run to know whether the sophisticated algorithm was needed.}

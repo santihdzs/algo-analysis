@@ -1,0 +1,17 @@
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{2.5cm}>{\raggedright\arraybackslash}p{3.9cm}>{\raggedright\arraybackslash}p{1.3cm}>{\raggedright\arraybackslash}p{1.1cm}>{\raggedright\arraybackslash}p{3.7cm}}
+\hline
+algorithm & technique & complexity & slope real & slope adv. & largest run (real / adv.) \\
+\hline
+naive search & brute force & $O(nm)$ & 1.04 & 1.01 & 1.7 ms / 41.2 ms, $n = 29903$ \\
+KMP & string & $O(n + m)$ & 1.02 & 1.02 & 1.5 ms / 2.3 ms, $n = 29903$ \\
+Z-function & string & $O(n + m)$ & 1.03 & 1.00 & 3.9 ms / 5.4 ms, $n = 29903$ \\
+LCS rows, Python & DP & $O(nm)$ time, $O(m)$ space & 2.03 & -- & 445.2 ms, $n = 3000$ \\
+LCS rows, numpy & DP & $O(nm)$ time, $O(m)$ space & 1.86 & -- & 1.74 s, $n = 29903$ \\
+Hirschberg & D\&C + DP & $O(nm)$ time, $O(n + m)$ space & 1.79 & -- & 4.08 s, $n = 29903$ \\
+ORF selection & greedy & $O(n + c \log c)$ vs $O(2^c)$ & 1.02 (scan) & -- & exhaustive 39.7 ms, $c = 16$ \\
+protein localisation & backtracking & $O(6^k)$ worst, pruned & -- & -- & 108 vs 995328 nodes, $k = 10$ \\
+motif search & branch and bound & $O(4^k n)$ worst, pruned & -- & -- & 6383 vs 85695 nodes, $k = 8$ \\
+centre expansion & brute force & $O(n^2)$ & 1.03 & 2.00 & 8.5 ms / 366.3 ms \\
+Manacher & string & $O(n)$ & 1.00 & 1.01 & 10.3 ms / 1.6 ms \\
+\hline
+\end{tabular}

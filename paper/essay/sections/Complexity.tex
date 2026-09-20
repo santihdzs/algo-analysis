@@ -1,0 +1,11 @@
+\section{Complexity analysis}\label{sec:complexity}
+
+\ph{LCS paragraph. Main idea: filling the table is $\Theta(nm)$ time and $\Theta(nm)$ space; the length alone is $\Theta(nm)$ time and $\Theta(m)$ space. For the genomes: $8.9 \times 10^8$ cells, 3.57 GB as a table, 239 KB as two rows.}
+
+\ph{Hirschberg paragraph. Main idea: at the top level the two last-row computations cost $nm$ cell updates; at the next level the two sub-rectangles have total area at most $nm / 2$ because they split both $X$ and $Y$; the areas form a geometric series, so the total is at most $2nm$ cell updates, that is, $O(nm)$ time with $O(n + m)$ memory. Depth is $O(\log n)$. Note the constant: about twice the work of the length-only version, which is what the measurements show (Table~\ref{tab:complexity}).}
+
+\ph{Pattern search paragraph. Naive: $O(nm)$ worst case, reached by the adversarial text $A^n$ with pattern $A^{m-1}C$; on real DNA a mismatch occurs after about $1.3$ comparisons on average so it behaves linearly. KMP: $O(m)$ preprocessing plus $O(n)$ scan, because the text pointer only advances and the pattern pointer decreases at most as often as it increases. Z: $O(n + m)$ by the same amortised argument on the right boundary.}
+
+\ph{Greedy, backtracking, branch and bound paragraph. Greedy ORF selection: $O(n)$ to scan the three frames, $O(c \log c)$ to sort $c$ candidates, versus $O(2^c)$ for the exhaustive subset search (doubling per candidate is visible in Figure~\ref{fig:search_space}). Backtracking: worst case is the number of encodings, $\prod_{t \le k} \deg(a_t) \le 6^k$, but each node costs only the size of its candidate set, and pruning keeps the explored nodes near-constant in $k$ once the prefix is specific enough. Branch and bound: worst case $O(4^k \cdot n)$ like exhaustive search; the measured benefit is on nodes, not on time, because the bound $|\text{alive}|$ is loose at shallow depth, where most positions are still alive and most of the filtering work happens.}
+
+\ph{Manacher paragraph. Centre expansion $O(n^2)$ worst case (slope 2.00 on $A^n$), Manacher $O(n)$ (slope 1.05 on the same input). On real DNA both are effectively linear because palindromes are short, so Manacher's advantage only shows on adversarial input.}

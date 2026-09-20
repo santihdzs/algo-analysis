@@ -1,0 +1,89 @@
+\documentclass[pdftex,11pt,a4paper]{article} 
+% margin size
+\usepackage[margin=1in]{geometry}
+
+% Math and algorithms
+\usepackage{amsmath,amssymb,amsthm,esint}  % For both in-line and equation mode
+\usepackage{bbm}
+\usepackage{mathdots}
+\usepackage{bm}
+\usepackage{algorithm}
+\usepackage{algorithmic} % Algorithm styles, need to be nested for the example shown
+\usepackage{aliascnt}
+\numberwithin{equation}{section} % Numbering of our equations per section
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+
+\usepackage{setspace} %Spacing on the front page for crest and titles
+\usepackage[]{fncychap} % Styles can be Sonny, Lenny, Glenn, Conny, Rejne, Bjarne and Bjornstrup
+\usepackage[hyphens]{url} % Deals with hyphens in urls to make them clickable
+\usepackage{xcolor} % Great if you want coloured text
+
+% Figures
+\usepackage{wrapfig}
+\usepackage{graphicx} % Inserting images
+\graphicspath{ {figures/} } 
+\usepackage{caption}
+\usepackage{float}
+
+% Tables
+\usepackage{tabularx}
+\usepackage{multirow} 
+\renewcommand{\arraystretch}{1.5}
+
+% Appendix
+\usepackage{appendix} 
+
+\usepackage{natbib}
+\usepackage{comment}
+\usepackage{booktabs}
+
+% purple placeholders for paragraphs still to be written
+\newcommand{\ph}[1]{\textcolor{purple}{[#1]}}
+
+% Tikz figures
+\usepackage{tikz}
+\newcommand{\ImageWidth}{14cm} 
+\usetikzlibrary{decorations.pathreplacing,positioning, arrows.meta} 
+
+% Fancy headers and footnotes
+\usepackage{fancyhdr}
+\usepackage[symbol]{footmisc}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}} 
+
+% Hyperlinks and auto-references
+\usepackage[hidelinks]{hyperref}  
+\def\sectionautorefname{Section}
+\def\appendixname{Appendix}
+\newcommand{\propositionautorefname}{Proposition}
+\newcommand{\definitionautorefname}{Definition}
+\newcommand{\corollaryautorefname}{Corollary}  
+
+\setlength{\footnotesep}{0.5cm}
+%%%%%%%%%%%%%%%%%%%%%%%%%% DOCUMENT STARTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{document} 
+% Front page 
+\include{preamble/front-page}  
+\include{preamble/contents}
+
+% Sections
+\input{sections/Problem}
+\input{sections/Datasets}
+\input{sections/Algorithm}
+\input{sections/Implementation}
+\input{sections/Complexity}
+\input{sections/Results}
+\input{sections/Conclusion}
+
+\addcontentsline{toc}{section}{References}
+\bibliographystyle{apalike}
+\bibliography{references}
+
+\pagebreak
+\input{appendices/appendix}
+
+\end{document}

@@ -1,0 +1,79 @@
+\begin{appendices}
+\addcontentsline{toc}{section}{Appendix}
+
+\section{Additional tables}
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \renewcommand{\arraystretch}{1.25}
+    \setlength{\tabcolsep}{3pt}
+    \input{tables/tab_complexity}
+    \caption{Theoretical complexity against the measured log-log slope of running time versus input size. Timings from one run of the notebook on a laptop.}
+    \label{tab:complexity}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \input{tables/tab_proteins}
+    \caption{Proteins located by backtracking with $k = 6$ amino acids (0-based genome positions). Matched is the number of leading amino acids reproduced by translating the genome from the located start.}
+    \label{tab:proteins}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \small
+    \input{tables/tab_orfs}
+    \caption{ORFs selected by greedy activity selection among candidates with at least 100 codons (0-based positions).}
+    \label{tab:orfs}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \small
+    \input{tables/tab_motif}
+    \caption{Most frequent $k$-mer with up to one mismatch in the Wuhan genome.}
+    \label{tab:motif}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \small
+    \input{tables/tab_palindromes}
+    \caption{Longest palindrome per gene (0-based positions inside the gene).}
+    \label{tab:palindromes}
+\end{table}
+
+\section{Additional figures}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.48\textwidth]{fig_lcs_matrix}
+    \includegraphics[width=0.48\textwidth]{fig_hirschberg_splits}
+    \caption{Left: LCS table and traceback on a 15-symbol window around the first substitution. Right: the split points chosen by Hirschberg's recursion on the two genomes, coloured by depth.}
+    \label{fig:splits}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{fig_gene_map}
+    \caption{Genes located by pattern search in the Wuhan genome and the occurrences of the most frequent 6-mer.}
+    \label{fig:gene_map}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{fig_orf_map}
+    \caption{Candidate ORFs per reading frame (grey) and the greedy selection (colour) against the known genes.}
+    \label{fig:orf}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{fig_freq_protein}
+    \caption{Pooled amino-acid frequencies over the 24 protein records.}
+    \label{fig:freq_protein}
+\end{figure}
+
+\end{appendices}

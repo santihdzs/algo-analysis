@@ -1,0 +1,15 @@
+\section{Problem definition}\label{sec:problem}
+
+\ph{Opening paragraph. Main idea: the assignment asks how different algorithmic strategies can analyse, search, compare and characterise biological sequences. State the decision taken here: rather than one technique, every technique of the course is applied to a concrete question that the problem scenario poses about the SARS-CoV-2 files, and the techniques are then compared on measured cost. The central problem is the comparison of the Wuhan 2019 genome (MN908947.3) with the Texas 2020 genome (MT106054.1): where are they the same, where do they differ, and do the differences change amino acids.}
+
+The mapping between questions and techniques is:
+\begin{itemize}\setlength\itemsep{0pt}
+    \item Where are the genes M, S and ORF1ab inside the genome? Exact pattern search: brute force as the baseline, then KMP and the Z-function.
+    \item How similar are the two genomes and what exactly changed? Longest common subsequence by dynamic programming, made feasible for two full genomes by Hirschberg's divide-and-conquer formulation.
+    \item Which open reading frames form the largest non-overlapping set? Greedy activity selection.
+    \item Where is each protein of \texttt{seq-proteins.txt} encoded? Backtracking over codon choices with pruning by the genome.
+    \item Which motif of length $k$ occurs most often when one mismatch is allowed? Branch and bound over the tree of prefixes.
+    \item Which region of each gene is the longest palindrome? Manacher's algorithm against centre expansion (extra technique).
+\end{itemize}
+
+\ph{Closing sentence: success is measured by three things per technique: a correct answer checked against an independent computation, a justification of why the technique fits the problem, and a measured running time compared with its theoretical complexity and with a brute-force baseline.}

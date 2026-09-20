@@ -1,0 +1,41 @@
+\section{Algorithm}\label{sec:algorithm}
+
+\subsection{Longest common subsequence by dynamic programming}
+
+For sequences $X = x_1 \dots x_n$ and $Y = y_1 \dots y_m$, the length of the longest common subsequence of the prefixes $x_1 \dots x_i$ and $y_1 \dots y_j$ satisfies
+\begin{equation}
+    L(i, j) = \begin{cases}
+        0 & i = 0 \text{ or } j = 0, \\
+        1 + L(i - 1, j - 1) & x_i = y_j, \\
+        \max\big(L(i - 1, j),\, L(i, j - 1)\big) & x_i \ne y_j.
+    \end{cases}
+    \label{eq:lcs}
+\end{equation}
+
+\ph{Why dynamic programming. Main idea: the recurrence has overlapping subproblems (each $L(i,j)$ is needed by up to three others) and optimal substructure (an optimal solution for $(i,j)$ contains an optimal solution for a smaller pair), so the naive recursion is exponential while a table filled row by row costs $\Theta(nm)$ \citep{clrs}. The subsequence itself is recovered by tracing back through the table.}
+
+\ph{The obstacle. Main idea: for the two genomes the table has $29\,903 \times 29\,882 \approx 8.9 \times 10^8$ cells, 3.57 GB at 4 bytes per cell, so the textbook algorithm cannot be run on a laptop or in Colab. The length alone needs only two rows, but the traceback needs the whole table.}
+
+\subsection{Hirschberg: divide and conquer on top of the recurrence}
+
+\ph{Main idea of Hirschberg's algorithm \citep{hirschberg1975}. Key facts to state: (1) the last row of the table, $L(\text{mid}, \cdot)$, can be computed with two rows of memory; (2) for any split of $X$ at its midpoint, $|LCS(X, Y)| = \max_k \big( |LCS(X[:\text{mid}], Y[:k])| + |LCS(X[\text{mid}:], Y[k:])| \big)$, and the maximising $k$ is found by adding the forward last row of $X[:\text{mid}]$ against $Y$ to the last row of the reversed $X[\text{mid}:]$ against the reversed $Y$; (3) the two halves are then solved recursively and the results concatenated. Divide: split $X$; conquer: recurse on the two sub-rectangles; combine: concatenate. Memory is $O(n + m)$ and time stays $O(nm)$ because the rectangles shrink geometrically (Section~\ref{sec:complexity}).}
+
+\ph{Note for the implementation: subproblems with at most $40\,000$ cells switch to a full table with traceback, which is the base case of the recursion. The recursion on the two genomes produced 255 split points with a maximum depth of 7 (Figure~\ref{fig:splits} in the appendix). A single-symbol $X$ is handled as its own base case so the split index is always at least 1.}
+
+\subsection{From subsequence to mutations}
+
+\ph{Main idea: consecutive matched pairs $(i, j)$ and $(i', j')$ delimit an unmatched gap $X[i+1:i']$ against $Y[j+1:j']$. Key argument: because the LCS is optimal, the two sides of a gap share no symbol at all (a shared symbol could be matched without disturbing any other pair, and the LCS would grow). Therefore a gap with equal length on both sides is a run of substitutions, a gap with one empty side is an insertion or a deletion, and anything else is a complex change.}
+
+\ph{Codon effect. Main idea: each substitution inside a coding region is translated in both genomes with the standard genetic code and classified as synonymous or non-synonymous. The reading frames are not assumed: gene S and gene M translate exactly to their protein records, and ORF1ab is translated in two frames because of the ribosomal frameshift at position 13\,468 (the ORF1a frame from 266 and the ORF1b frame from 13\,468); ten protein records are found whole in the first frame and four in the second, which validates both the frames and the codon table. Once backtracking (below) locates every protein, the classification is repeated over all coding regions.}
+
+\subsection{Supporting techniques}
+
+\ph{Pattern search. Main idea: naive search tries every alignment and compares symbol by symbol, $O(nm)$ in the worst case. KMP \citep{kmp1977} preprocesses the pattern into its failure table so the text pointer never moves backwards; the Z-function computes, for \texttt{pattern + \# + text}, the length of the longest prefix match at every position, and a value equal to $m$ is an occurrence. Both are $O(n + m)$. Sentence to keep: the improved methods avoid the repeated work of naive search because after a mismatch they reuse what is already known about the pattern instead of restarting the comparison.}
+
+\ph{Greedy ORF selection. Main idea: candidates are all open reading frames (every in-frame ATG up to the next in-frame stop) with at least 100 codons in the three forward frames; the problem is activity selection: choose the largest set of pairwise non-overlapping intervals. Why greedy: sorting by end position and always taking the earliest-ending compatible interval is optimal by the exchange argument (CLRS ch.~16): any optimal set can have its first interval replaced by the earliest-ending one without breaking compatibility. Also note the limitation shown in the results: the objective is the count, not the coverage.}
+
+\ph{Backtracking for protein localisation. Main idea: the genetic code is degenerate (up to six codons per amino acid), so a protein of length $L$ has up to $6^L$ encodings. The search builds an encoding codon by codon; the state is the set of genome positions still consistent with the codons chosen so far; a choice that leaves that set empty is pruned together with its whole subtree. Only the first $k = 6$ amino acids are searched, then every surviving position is verified by translating the genome forward for the whole protein.}
+
+\ph{Branch and bound for motif search. Main idea: candidates are $k$-mers built symbol by symbol, so the search space is a 4-ary tree of prefixes. A node carries the genome positions whose window still agrees with the prefix within $d$ mismatches, and the number of those positions is a valid upper bound on the count of any completion of the prefix (a window within $d$ mismatches of the full $k$-mer is within $d$ of its prefix). Best-first expansion with a max-heap on the bound, an incumbent from a greedy descent, pruning when the bound cannot beat the incumbent. Why not a hash table: with $d = 0$ one pass over the genome solves the problem in $O(nk)$, which is why the mismatch version is the one that justifies branch and bound.}
+
+\ph{Manacher. Main idea: centre expansion tries $2n - 1$ centres and is $O(n^2)$ in the worst case; Manacher \citep{manacher1975} interleaves a separator so every palindrome has odd length and reuses the radius of the mirror centre inside the rightmost known palindrome, so each symbol extends the right boundary at most once and the algorithm is $O(n)$.}
