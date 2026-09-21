@@ -1,9 +1,29 @@
 \section{Implementation}\label{sec:implementation}
 
-\ph{Overview paragraph. Main idea: a single notebook, \texttt{dna\_analysis.ipynb}, runs from top to bottom with no manual edits, in Jupyter or Colab, and needs only numpy and matplotlib. Every string algorithm is written from scratch: no \texttt{str.find}, no library search or alignment; numpy is used only to vectorise a dynamic programming row and for plotting. The notebook writes every figure and every table of this report into \texttt{figures/} and \texttt{tables/}, so no number was typed by hand.}
+A single notebook, \texttt{dna\_analysis.ipynb}, runs from top to bottom in
+Jupyter or in Colab, and needs only numpy and matplotlib. Every string algorithm is written from
+scratch: no \texttt{str.find}, no library search and no library alignment. Numpy is used only to
+vectorise a dynamic programming row and for plotting. The notebook writes every figure and every
+table of this report into \texttt{figures/} and \texttt{tables/}.
 
 The main components are: \texttt{read\_fasta} and \texttt{characterize} (parsing, Part 1 statistics, the unexpected-symbol check); \texttt{naive\_search}, \texttt{kmp\_search} with \texttt{build\_lps}, \texttt{z\_search} with \texttt{z\_function}, and \texttt{search\_all}, which runs the three and asserts that they agree; \texttt{lcs\_table} (full table with traceback, the oracle), \texttt{lcs\_rows\_py} (two rows, pure Python), \texttt{lcs\_last\_row} (two rows, numpy) and \texttt{hirschberg}, which returns the matched index pairs; \texttt{alignment\_events}, \texttt{classify\_substitutions} and \texttt{translate} with the standard codon table; \texttt{find\_orfs}, \texttt{greedy\_select}, \texttt{exhaustive\_select}; \texttt{locate\_backtracking}, \texttt{locate\_bruteforce} and \texttt{matched\_prefix} on top of a codon index (a dictionary from every 3-mer to its positions); \texttt{motif\_bnb} and \texttt{motif\_exhaustive} sharing \texttt{motif\_children}; \texttt{longest\_palindrome\_center} and \texttt{manacher}; and \texttt{bench} (minimum of repeated runs with \texttt{perf\_counter}) with \texttt{loglog\_slope}.
 
-\ph{The numpy row trick. Main idea: a row of the LCS table is a running maximum. When $x_i = y_j$ the diagonal value plus one dominates both neighbours; otherwise the cell is the maximum of its two neighbours. So with $c_j = L(i-1, j-1) + 1$ if $x_i = y_j$ and $c_j = L(i-1, j)$ otherwise, the row is $L(i, j) = \max(c_j, L(i, j-1))$, a cumulative maximum that numpy computes with \texttt{maximum.accumulate} in one vectorised call per row. This is what makes Hirschberg run on two full genomes in a few seconds of Python.}
+A row of the LCS table is a running maximum. When $x_i = y_j$ the diagonal value plus one dominates
+both neighbours. Otherwise, the cell is the maximum of its two neighbours. So with
+$c_j = L(i-1, j-1) + 1$ if $x_i = y_j$ and $c_j = L(i-1, j)$ otherwise, the row is
+$L(i, j) = \max(c_j, L(i, j-1))$, a cumulative maximum that numpy computes with
+\texttt{maximum.accumulate} in one vectorised call per row. This is what makes Hirschberg run on two
+full genomes in a few seconds of Python.
 
-\ph{Correctness checks (all are assertions in the notebook and all pass). Notes: the three search methods return identical positions on every search and the gene positions equal the header coordinates minus one; the LCS implementations (full table, two rows in Python, two rows in numpy, Hirschberg) agree with each other and with an independent bit-parallel oracle on the textbook example, on 200 random strings with the recursion forced down to tiny base cases, and on four genome windows containing substitutions, shifts and unequal lengths; on the full genomes the Hirschberg pairs form a valid common subsequence whose length equals the oracle's; gene S and gene M translate exactly to their protein records; greedy equals the exhaustive optimum on 14 candidates spread over the genome; backtracking and brute force find the same positions for every protein; branch and bound equals exhaustive search at $k = 8$, and with $d = 0$ equals a hash count; Manacher equals centre expansion on the three genes.}
+
+The three search methods
+return identical positions on every search, and the gene positions equal the header coordinates minus
+one. The four LCS implementations (full table, two rows in Python, two rows in numpy, and Hirschberg)
+agree with each other and with an independent bit-parallel oracle: on the textbook example, on 200
+random strings with the recursion forced down to tiny base cases, and on four genome windows
+containing substitutions, shifts and unequal lengths. On the full genomes the Hirschberg pairs form a
+valid common subsequence whose length equals the oracle's. Gene S and gene M translate exactly to
+their protein records. Greedy equals the exhaustive optimum on 14 candidates spread over the genome.
+Backtracking and brute force find the same positions for every protein. Branch and bound equals
+exhaustive search at $k = 8$, and with $d = 0$ it equals a hash count. Manacher equals centre
+expansion on the three genes.

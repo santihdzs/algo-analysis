@@ -1,5 +1,11 @@
 \begin{thebibliography}{}
 
+\bibitem[{Anthropic}, 2026]{claude}
+{Anthropic} (2026).
+\newblock Claude.
+\newblock Large language model, \url{https://claude.ai}.
+\newblock Used to assist with code and with the redaction of this report.
+
 \bibitem[Cormen et~al., 2009]{clrs}
 Cormen, T.~H., Leiserson, C.~E., Rivest, R.~L., and Stein, C. (2009).
 \newblock {\em Introduction to Algorithms}.
@@ -17,25 +23,7 @@ Knuth, D.~E., Morris, J.~H., and Pratt, V.~R. (1977).
 
 \bibitem[Manacher, 1975]{manacher1975}
 Manacher, G. (1975).
-\newblock A new linear-time on-line algorithm for finding the smallest initial
-  palindrome of a string.
+\newblock A new linear-time on-line algorithm for finding the smallest initial palindrome of a string.
 \newblock {\em Journal of the ACM}, 22(3):346--351.
-
-\bibitem[{NCBI Nucleotide}, 2020a]{ncbi_mt106054}
-{NCBI Nucleotide} (2020a).
-\newblock Severe acute respiratory syndrome coronavirus 2 isolate
-  {SARS-CoV-2/human/USA/TX-CDC-0305/2020}, accession {MT106054.1}.
-\newblock \url{https://www.ncbi.nlm.nih.gov/nuccore/MT106054.1}.
-
-\bibitem[{NCBI Nucleotide}, 2020b]{ncbi_mn908947}
-{NCBI Nucleotide} (2020b).
-\newblock Severe acute respiratory syndrome coronavirus 2 isolate {Wuhan-Hu-1},
-  complete genome, accession {MN908947.3}.
-\newblock \url{https://www.ncbi.nlm.nih.gov/nuccore/MN908947.3}.
-
-\bibitem[{Zhang Lab}, 2020]{zhanglab}
-{Zhang Lab} (2020).
-\newblock Genome-wide structure and function modeling of {SARS-CoV-2}.
-\newblock \url{https://zhanggroup.org/COVID-19/}.
 
 \end{thebibliography}

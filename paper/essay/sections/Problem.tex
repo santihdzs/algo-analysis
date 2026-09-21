@@ -1,6 +1,14 @@
 \section{Problem definition}\label{sec:problem}
 
-\ph{Opening paragraph. Main idea: the assignment asks how different algorithmic strategies can analyse, search, compare and characterise biological sequences. State the decision taken here: rather than one technique, every technique of the course is applied to a concrete question that the problem scenario poses about the SARS-CoV-2 files, and the techniques are then compared on measured cost. The central problem is the comparison of the Wuhan 2019 genome (MN908947.3) with the Texas 2020 genome (MT106054.1): where are they the same, where do they differ, and do the differences change amino acids.}
+The assignment explores how different algorithmic strategies can analyse, search, compare and
+characterise biological sequences. Rather than apply one technique, this report applies every
+technique of the course to a concrete question that the problem scenario poses about the
+SARS-CoV-2 files, and then compares the techniques on measured cost. The main technique of the
+report is Hirschberg's algorithm, dynamic programming for the longest common subsequence
+combined with divide and conquer. It is applied to the comparison of the Wuhan 2019 genome
+(MN908947.3) with the Texas 2020 genome (MT106054.1). The other techniques are supporting
+evidence that answer smaller questions about the same files and provide the baselines against
+which the main result is judged.
 
 The mapping between questions and techniques is:
 \begin{itemize}\setlength\itemsep{0pt}
@@ -12,4 +20,6 @@ The mapping between questions and techniques is:
     \item Which region of each gene is the longest palindrome? Manacher's algorithm against centre expansion (extra technique).
 \end{itemize}
 
-\ph{Closing sentence: success is measured by three things per technique: a correct answer checked against an independent computation, a justification of why the technique fits the problem, and a measured running time compared with its theoretical complexity and with a brute-force baseline.}
+Success is measured by three criterion per technique: a correct answer checked against an independent
+computation, a justification of why the technique fits the problem, and a measured running time
+compared with its theoretical complexity and with a brute-force baseline.

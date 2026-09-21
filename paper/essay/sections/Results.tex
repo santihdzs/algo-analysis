@@ -10,7 +10,12 @@
     \label{tab:genome}
 \end{table}
 
-\ph{What the number means. Main idea: $|LCS| = 29\,875$ against lengths 29\,903 and 29\,882 gives a similarity of 0.99906; the LCS counts symbols that can be kept in order in both genomes, so $n - |LCS| = 28$ symbols of Wuhan and $m - |LCS| = 7$ of Texas have no partner. Limitation to state: the LCS ignores locality, a scattered set of matches and a contiguous block score the same, which is why the gap analysis is needed to say where the differences are.}
+
+$|LCS| = 29\,875$ against lengths 29\,903 and 29\,882 gives a similarity of 0.99906. The LCS counts
+the symbols that can be kept in order in both genomes, so $n - |LCS| = 28$ symbols of the Wuhan
+genome and $m - |LCS| = 7$ symbols of the Texas genome have no partner. The measure has one
+limitation: the LCS ignores locality, and a scattered set of matches scores the same as a contiguous
+block of the same size. This is why the gap analysis is needed to say where the differences are.
 
 \begin{table}[H]
     \centering
@@ -27,11 +32,39 @@
     \label{fig:mutations}
 \end{figure}
 
-\ph{Reading Table~\ref{tab:mutations} and Figure~\ref{fig:mutations}. Main idea: six substitutions, three synonymous and three non-synonymous; the non-synonymous ones are D$\to$A in QHD43415\_13 and two in QHD43422 (T$\to$I, L$\to$S). The three indels are all after position 29\,000: a 21-nucleotide run of A missing from the Texas record, which is the poly-A tail (how far the sequencing read, not a mutation), and an insertion plus a deletion three positions apart near 29\,091 that is really one more substitution, C$\to$T at 29\,095: the LCS has no substitution operation, and when the changed base equals its neighbour (Wuhan \texttt{GCTTTCGG}, Texas \texttt{GCTTTTGG}) an indel pair and a substitution give the same LCS length, so the traceback may return either. This is the main limitation of using the LCS as a diff. Note that two substitutions fell outside the three gene files and could only be classified after backtracking located QHD43422.}
+There are six substitutions: three of them synonymous and three not. The three
+non-synonymous ones are D$\to$A in QHD43415\_13 and two in QHD43422, T$\to$I and L$\to$S. The three indels are all after
+position 29\,000. One is a 21-nucleotide run of A missing from the Texas record, which reflects how far the sequencing read went, not a mutation. The other two are an insertion
+and a deletion three positions apart near 29\,091, and together they are really one more
+substitution, C$\to$T at 29\,095: the LCS has no substitution operation, and when the changed base
+equals its neighbour (Wuhan \texttt{GCTTTCGG}, Texas \texttt{GCTTTTGG}) an indel pair and a
+substitution give the same LCS length, so the traceback may return either. This is the main
+limitation of using the LCS as a diff. An edit-distance objective under the same Hirschberg
+recursion, which does have a substitution operation, would report the change at 29\,095 as a
+substitution. Note that two substitutions also fell outside the three gene files and could only be
+classified after backtracking located QHD43422.
 
 \subsection{Search, greedy, backtracking, branch and bound, palindromes}
 
-\ph{One paragraph per technique, numbers from the appendix tables. Search: all three genes found at exactly the header coordinates (ORF1ab at 266, S at 21\,563, M at 26\,523, 1-based), and in the Texas genome S and M are found intact while ORF1ab is not, consistent with the substitutions in Table~\ref{tab:mutations}. Greedy: 187 candidate ORFs, 8 selected, S and M recovered exactly, ORF1a and ORF1b as the two large pieces; lowering the threshold to 30 codons makes greedy pick 53 small ORFs covering 30\% of the genome and none of the known genes, because the objective is the count (Table~\ref{tab:orfs}, Figure~\ref{fig:orf}). Backtracking: 23 of 24 proteins located over their full length with a few dozen nodes each; the exception, QHD43415\_11, matches exactly 9 amino acids from position 13\,441, that is, up to nucleotide 13\,468, the ribosomal frameshift, so the algorithm found the biology rather than failing (Table~\ref{tab:proteins}). Branch and bound: for $k = 8$, $d = 1$ the motif TGTTGTTA occurs 75 times, the same optimum as exhaustive search with 6\,383 instead of 85\,695 nodes (Table~\ref{tab:motif}). Palindromes: longest palindrome of 11, 15 and 20 nucleotides in M, S and ORF1ab (Table~\ref{tab:palindromes}).}
+Pattern search found all three genes at exactly the header coordinates: ORF1ab at 266, S at
+21\,563 and M at 26\,523 in 1-based positions. In the Texas genome S and M are found intact while
+ORF1ab is not, which is consistent with the substitutions in Table~\ref{tab:mutations}.
+
+Greedy activity selection took 187 candidate ORFs and selected 8, recovering S and M exactly and
+ORF1ab as its two large pieces, ORF1a and ORF1b. Lowering the threshold to 30 codons makes greedy
+pick 53 small ORFs that cover 30\% of the genome and recover none of the known genes, because the
+objective is the count (Table~\ref{tab:orfs}, Figure~\ref{fig:orf}).
+
+Backtracking located 23 of the 24 proteins over their full length, with between 19 and 143 nodes
+each. The exception, QHD43415\_11, matches exactly 9 amino acids from position 13\,441, that is, up
+to nucleotide 13\,468, the ribosomal frameshift, so the algorithm found the biology rather than
+failing (Table~\ref{tab:proteins}).
+
+Branch and bound found, for $k = 8$ and $d = 1$, the motif TGTTGTTA with 75 occurrences, the same
+optimum as exhaustive search, using 6\,383 nodes instead of 85\,695 (Table~\ref{tab:motif}).
+
+Manacher gave a longest palindrome of 11, 15 and 20 nucleotides in M, S and ORF1ab
+(Table~\ref{tab:palindromes}).
 
 \subsection{Performance}
 
@@ -42,7 +75,17 @@
     \label{fig:time}
 \end{figure}
 
-\ph{Explain Figure~\ref{fig:time} panel by panel. Search on real DNA: all three linear (slopes close to 1, Table~\ref{tab:complexity}); naive is not slower because a mismatch ends most alignments after one or two comparisons; Z is two to three times KMP because it builds and stores an array of $n + m + 1$ values while KMP keeps one pointer. Adversarial text: naive is still slope 1 in $n$ but 20 times slower than KMP, the factor $m = 50$ of the $O(nm)$ bound; KMP and Z unchanged. LCS: pure Python rows and numpy rows both have slope close to 2, quadratic as $O(nm)$ with $n = m$; Hirschberg has the same slope and costs about twice the numpy rows, the $2nm$ bound; the pure Python version reaches only $n = 3\,000$ in the time numpy needs for the full genomes. Palindromes: centre expansion linear on DNA (1.02) but quadratic on $A^n$ (2.00); Manacher linear on both.}
+On real DNA the three search methods are all linear, at slopes 1.03, 1.00 and 1.02
+(Table~\ref{tab:complexity}). Naive search is not slower than the others because a mismatch ends most
+alignments after one or two comparisons. The Z-function is two to three times KMP because it builds
+and stores an array of $n + m + 1$ values while KMP keeps one pointer. On the adversarial text naive
+search still has slope 1 in $n$, but it is about 20 times slower than KMP, the factor $m = 50$ of the
+$O(nm)$ bound; KMP and Z are unchanged. In the LCS panel the pure Python rows and the numpy rows both
+have a slope close to 2, quadratic as $O(nm)$ predicts with $n = m$, and Hirschberg has the same slope
+and costs about twice the numpy rows, the $2nm$ bound; the pure Python version reaches only
+$n = 3\,000$, where one alignment already takes 431.5 ms, while numpy covers the full 29\,903 in
+1.68 s. In the palindrome panel centre expansion is linear on DNA (1.04) but quadratic on $A^n$
+(2.02), while Manacher is linear on both.
 
 \begin{figure}[H]
     \centering
@@ -51,4 +94,9 @@
     \label{fig:search_space}
 \end{figure}
 
-\ph{Explain Figure~\ref{fig:search_space}. Exhaustive subset search doubles with every candidate while greedy is flat; enumerating encodings grows by the codon degeneracy at each amino acid (up to $10^6$ at $k = 10$) while backtracking stays near 100 nodes because after three amino acids the prefix pins down a single genome position; branch and bound expands about 7\% of the exhaustive nodes at $k = 8$ and keeps growing slowly to $k = 12$, where exhaustive search is no longer feasible.}
+Exhaustive subset search doubles with every candidate while greedy stays flat. Enumerating
+encodings grows by the codon degeneracy at each amino acid and reaches 995\,328 at $k = 10$, while
+backtracking stays near 100 nodes, 108 at the same $k$, because after three amino acids the prefix
+pins down a single genome position. Branch and bound expands about 7\% of the exhaustive nodes at
+$k = 8$, 6\,383 against 85\,695, and keeps growing slowly to $k = 12$, where exhaustive search is no
+longer feasible.
